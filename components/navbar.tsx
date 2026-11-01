@@ -38,7 +38,7 @@ export default function Navbar() {
             <MessageSquare className="h-4 w-4" />
             Feedback
           </Link>
-          {/* Admin Link*/}
+          {/* Admin Link */}
           <SignedIn>
             <Link
               href="/admin"
