@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/navbar";
@@ -18,16 +19,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
-        {/* Navbar */}
-        <Navbar />
-        {/* Main section */}
-        <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
-        {/* Footer */}
-        <Footer />
-        <Toaster />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.className} min-h-screen flex flex-col`}>
+          {/* Navbar */}
+          <Navbar />
+          {/* Main section */}
+          <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
+          {/* Footer */}
+          <Footer />
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
