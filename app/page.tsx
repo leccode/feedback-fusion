@@ -9,9 +9,31 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import prisma from "@/lib/prisma";
 import Link from "next/link";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const posts = await prisma.post.findMany({
+    include: {
+      author: true,
+      votes: true,
+    },
+    orderBy: {
+      votes: {
+        _count: "desc",
+      },
+    },
+  });
+
+  const groupedPosts = {
+    under_review: posts.filter((p) => p.status === "under_review"),
+    planned: posts.filter((p) => p.status === "planned"),
+    in_progress: posts.filter((p) => p.status === "in_progress"),
+    completed: posts.filter((p) => p.status === "completed"),
+  };
+
+  const totalVotes = posts.reduce((acc, post) => acc + post.votes.length, 0);
+
   return (
     <div className="space-y-12">
       {/* Hero Section */}
@@ -95,15 +117,17 @@ export default function HomePage() {
       <section className="text-center">
         <div className="inline-grid grid-cols-3 gap-8">
           <div>
-            <div className="text-3xl font-bold">1,234+</div>
+            <div className="text-3xl font-bold">{posts.length}</div>
             <div className="text-muted-foreground">Suggestions</div>
           </div>
           <div>
-            <div className="text-3xl font-bold">8,901+</div>
+            <div className="text-3xl font-bold">{totalVotes}</div>
             <div className="text-muted-foreground">Votes Cast</div>
           </div>
           <div>
-            <div className="text-3xl font-bold">254+</div>
+            <div className="text-3xl font-bold">
+              {groupedPosts.completed.length}
+            </div>
             <div className="text-muted-foreground">Features Shipped</div>
           </div>
         </div>
